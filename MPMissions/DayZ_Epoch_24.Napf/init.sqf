@@ -35,7 +35,9 @@ DynamicVehicleDamageLow = 0; // Default: 0
 DynamicVehicleDamageHigh = 100; // Default: 100
 DZE_BuildOnRoads = false; // Default: False
 DZE_MissionLootTable = true;
-DZE_ConfigTrader = true;
+/*ZSC*/
+DZE_ConfigTrader = true; 
+/*ZSC*/
 EpochEvents = [["any","any","any","any",30,"crash_spawner"],["any","any","any","any",0,"crash_spawner"],["any","any","any","any",15,"supply_drop"]];
 dayz_fullMoonNights = true;
 //Load in compiled functions
@@ -45,7 +47,10 @@ call compile preprocessFileLineNumbers "\z\addons\dayz_code\init\publicEH.sqf";	
 progressLoadingScreen 0.2;
 call compile preprocessFileLineNumbers "\z\addons\dayz_code\medical\setup_functions_med.sqf";	//Functions used by CLIENT for medical
 progressLoadingScreen 0.4;
-call compile preprocessFileLineNumbers "\z\addons\dayz_code\init\compiles.sqf";				//Compile regular functions
+call compile preprocessFileLineNumbers "\z\addons\dayz_code\init\compiles.sqf";	//Compile regular functions
+/*ZSC*/	
+call compile preprocessFileLineNumbers "ZSC\gold\ZSCinit.sqf";
+/*ZSC*/			
 progressLoadingScreen 0.5;
 call compile preprocessFileLineNumbers "server_traders.sqf";				//Compile trader configs
 progressLoadingScreen 1.0;
@@ -56,17 +61,24 @@ call compile preprocessFileLineNumbers "\z\addons\dayz_server\missions\DayZ_Epoc
 // Add trader citys
 _nil = [] execVM "\z\addons\dayz_server\missions\DayZ_Epoch_24.Napf\mission.sqf";
 _serverMonitor = 	[] execVM "\z\addons\dayz_code\system\server_monitor.sqf";
+
+/*ZSC*/
+_serverMonitor = 	[] execVM "\z\addons\dayz_server\system\server_monitor.sqf";
+/*ZSC*/
+
 };
 if (!isDedicated) then {
-//Conduct map operations
-0 fadeSound 0;
-waitUntil {!isNil "dayz_loadScreenMsg"};
-dayz_loadScreenMsg = (localize "STR_AUTHENTICATING");	
-//Run the player monitor
-_id = player addEventHandler ["Respawn", {_id = [] spawn player_death;}];
-_playerMonitor = 	[] execVM "\z\addons\dayz_code\system\player_monitor.sqf";	
-//Lights
-//[false,12] execVM "\z\addons\dayz_code\compile\local_lights_init.sqf";
+	//Conduct map operations
+	0 fadeSound 0;
+	waitUntil {!isNil "dayz_loadScreenMsg"};
+	dayz_loadScreenMsg = (localize "STR_AUTHENTICATING");	
+	//Run the player monitor
+	_id = player addEventHandler ["Respawn", {_id = [] spawn player_death;}];
+	_playerMonitor = 	[] execVM "\z\addons\dayz_code\system\player_monitor.sqf";	
+
+	//Lights
+	//[false,12] execVM "\z\addons\dayz_code\compile\local_lights_init.sqf";
+	execVM "ZSC\compiles\playerHud.sqf";
 };
 //Start Dynamic Weather
 execVM "\z\addons\dayz_code\external\DynamicWeatherEffects.sqf";
